@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterController: {fileID: 483193463}
+  _cameraMovement: {fileID: 963194229}
   _speed: 6
 --- !u!143 &483193463
 CharacterController:
