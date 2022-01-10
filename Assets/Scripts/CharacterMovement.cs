@@ -6,13 +6,23 @@ public class CharacterMovement : MonoBehaviour
     private CharacterController _characterController;
     [SerializeField]
     private SphericalCameraMovement _cameraMovement;
+    [SerializeField]
+    private Animator _animator;
     
     [SerializeField]
     private float _speed;
+    [SerializeField]
+    private float _gravityModifier;
+    [SerializeField]
+    private float _jumpForce;
 
     private Vector3 _frontDirection;
     private Vector3 _sideDirection;
     private Vector3 _walkDirection;
+    private Vector3 _verticalDirection;
+    private Vector3 _moveDirection;
+
+    private bool _isJumping;
 
     private void Start()
     {
@@ -25,6 +35,29 @@ public class CharacterMovement : MonoBehaviour
         _sideDirection = Input.GetAxis("Horizontal") * _cameraMovement.Right;
         _walkDirection = _frontDirection + _sideDirection;
 
+        if (_characterController.isGrounded)
+        {
+            _verticalDirection.y = 0;
+        }
+        else
+        {
+            _verticalDirection.y += Physics.gravity.y * _gravityModifier * Time.deltaTime;
+        }
+
+        if (_isJumping && _characterController.isGrounded)
+        {
+            _isJumping = false;
+        }
+
+        if (!_isJumping)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                _verticalDirection.y = _jumpForce;
+                _isJumping = true;
+            }
+        }
+
         if (_walkDirection.magnitude > 0)
         {
             transform.forward = _walkDirection.normalized;
@@ -35,7 +68,8 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
-        Vector3 moveDelta = _walkDirection * _speed * Time.deltaTime;
+        _moveDirection = _walkDirection + _verticalDirection;
+        Vector3 moveDelta = _moveDirection * _speed * Time.deltaTime;
         _characterController.Move(moveDelta);
     }
 }

@@ -171,6 +171,7 @@ MonoBehaviour:
   _characterController: {fileID: 483193463}
   _cameraMovement: {fileID: 963194229}
   _speed: 6
+  _gravityModifier: 1
 --- !u!143 &483193463
 CharacterController:
   m_ObjectHideFlags: 0
@@ -381,6 +382,7 @@ MonoBehaviour:
   target: {fileID: 483193461}
   smoothness: 6
   mouseSensitivity: 10
+  zoomSensitivity: 40
 --- !u!1 &1246292535
 GameObject:
   m_ObjectHideFlags: 0

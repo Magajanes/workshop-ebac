@@ -21,6 +21,7 @@ public class SphericalCameraMovement : MonoBehaviour
     private float _radius;
     private float _theta = 1;
     private float _phi = 3.89f;
+    private readonly Vector3 _offset = 1.6f * Vector3.up;
 
     public Vector3 Forward
     {
@@ -79,6 +80,6 @@ public class SphericalCameraMovement : MonoBehaviour
     {
         _nextPosition = target.position + _cameraRadius;
         transform.position = Vector3.Lerp(transform.position, _nextPosition, smoothness * Time.deltaTime);
-        transform.forward = (target.position - transform.position).normalized;
+        transform.forward = (target.position - transform.position + _offset).normalized;
     }
 }
