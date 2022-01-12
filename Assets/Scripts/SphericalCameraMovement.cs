@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class SphericalCameraMovement : MonoBehaviour
 {
+    public const float RADIUS_LOWER_BOUND = 2.2f;
+    public const float RADIUS_UPPER_BOUND = 8f;
+
     [Header("References")]
     [SerializeField]
     private Transform target;
@@ -13,15 +16,21 @@ public class SphericalCameraMovement : MonoBehaviour
     private float mouseSensitivity;
     [SerializeField]
     private float zoomSensitivity;
+    [SerializeField]
+    private float lookSmoothness;
+    [HideInInspector]
+    public bool FollowHeight;
 
     private Vector3 _cameraRadius;
-    private Vector3 _nextPosition;
     private Vector3 _cameraForward;
 
     private float _radius;
     private float _theta = 1;
     private float _phi = 3.89f;
     private readonly Vector3 _offset = 1.6f * Vector3.up;
+
+    private float _rigidLookHeight;
+    private float _rigidCameraHeight;
 
     public Vector3 Forward
     {
@@ -56,12 +65,14 @@ public class SphericalCameraMovement : MonoBehaviour
     {
         _cameraRadius = transform.position - target.position;
         _radius = _cameraRadius.magnitude;
+        FollowHeight = true;
     }
 
     private void SetParametersValues()
     {
         _radius -= Input.mouseScrollDelta.y * zoomSensitivity * Time.deltaTime;
-        
+        _radius = Mathf.Clamp(_radius, RADIUS_LOWER_BOUND, RADIUS_UPPER_BOUND);
+
         if (!Input.GetMouseButton(1)) return;
         
         _theta += Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
@@ -78,8 +89,18 @@ public class SphericalCameraMovement : MonoBehaviour
 
     private void SetCameraPosition()
     {
-        _nextPosition = target.position + _cameraRadius;
-        transform.position = Vector3.Lerp(transform.position, _nextPosition, smoothness * Time.deltaTime);
-        transform.forward = (target.position - transform.position + _offset).normalized;
+        Vector3 nextPosition = target.position + _cameraRadius;
+        nextPosition.y = FollowHeight ? nextPosition.y : _rigidCameraHeight;
+        transform.position = Vector3.Lerp(transform.position, nextPosition, smoothness * Time.deltaTime);
+
+        Vector3 lookPosition = target.position;
+        lookPosition.y = FollowHeight ? lookPosition.y : _rigidLookHeight;
+        transform.forward = Vector3.Lerp(transform.forward, (lookPosition + _offset - transform.position).normalized, lookSmoothness * Time.deltaTime);
+    }
+
+    public void SetRigidLookHeight(float height)
+    {
+        _rigidLookHeight = height;
+        _rigidCameraHeight = transform.position.y;
     }
 }

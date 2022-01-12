@@ -57,10 +57,15 @@ public class CharacterMovement : MonoBehaviour
 
     private void CheckAttached()
     {
-        if (_isAttached) return;
+        if (_isAttached && !_isJumping) 
+        {
+            _verticalDirection.y = 0;
+            return; 
+        }
 
         if (!_characterController.isGrounded) return;
 
+        _externalVelocity.y = 0;
         if (_externalVelocity.magnitude > 0.1f)
         {
             _externalVelocity -= _drag * Time.deltaTime * _externalVelocity.normalized;
@@ -90,6 +95,9 @@ public class CharacterMovement : MonoBehaviour
         _verticalDirection.y = _jumpForce;
         _isJumping = true;
         _animator.SetTrigger("Jump");
+
+        _cameraMovement.FollowHeight = false;
+        _cameraMovement.SetRigidLookHeight(transform.position.y);
     }
 
     private void CheckLanding()
@@ -100,6 +108,8 @@ public class CharacterMovement : MonoBehaviour
 
         _isJumping = false;
         _animator.SetTrigger("Land");
+
+        _cameraMovement.FollowHeight = true;
     }
 
     private void CalculateGravity()

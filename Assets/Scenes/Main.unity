@@ -521,6 +521,8 @@ MonoBehaviour:
   smoothness: 6
   mouseSensitivity: 10
   zoomSensitivity: 40
+  lookSmoothness: 25
+  FollowHeight: 0
 --- !u!1 &1030587488
 GameObject:
   m_ObjectHideFlags: 0
