@@ -1,15 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SenoidalPlatform : MovingPlatform
 {
-    public enum Direction
-    {
-        RIGHT,
-        UP,
-        FORWARD
-    }
-
     [SerializeField]
     private float _amplitude;
     [SerializeField]
@@ -17,16 +9,9 @@ public class SenoidalPlatform : MovingPlatform
     [SerializeField]
     private Direction _direction;
 
-    private static Dictionary<Direction, Vector3> _movementDirections = new Dictionary<Direction, Vector3>
-    {
-        { Direction.RIGHT, Vector3.right },
-        { Direction.UP, Vector3.up },
-        { Direction.FORWARD, Vector3.forward }
-    };
-
     protected override Vector3 VelocityFunction(float parameter)
     {
-        return _amplitude * Mathf.Sin(_frequency * parameter) * _movementDirections[_direction];
+        return _amplitude * Mathf.Sin(_frequency * parameter) * _versors[_direction];
     }
 
     protected override void UpdateParameter()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class MovingPlatform : MonoBehaviour
@@ -9,10 +10,19 @@ public abstract class MovingPlatform : MonoBehaviour
 
     protected abstract Vector3 VelocityFunction(float parameter);
 
-    private void Update()
+    protected static Dictionary<Direction, Vector3> _versors = new Dictionary<Direction, Vector3>
+    {
+        { Direction.RIGHT, Vector3.right },
+        { Direction.UP, Vector3.up },
+        { Direction.FORWARD, Vector3.forward }
+    };
+
+    protected virtual void Update()
     {
         Move();
         UpdateParameter();
+
+        OnMove?.Invoke(_velocity);
     }
 
     protected virtual void UpdateParameter()
@@ -24,6 +34,12 @@ public abstract class MovingPlatform : MonoBehaviour
     {
         _velocity = VelocityFunction(_timeParameter);
         transform.position += _velocity * Time.deltaTime;
-        OnMove?.Invoke(_velocity);
     }
+}
+
+public enum Direction
+{
+    RIGHT,
+    UP,
+    FORWARD
 }

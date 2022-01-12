@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlatformTrigger : MonoBehaviour
 {
     [SerializeField]
-    private MovingPlatform _platform;
+    protected MovingPlatform _platform;
 
     protected virtual void OnTriggerEnter(Collider other)
     {
