@@ -26,6 +26,8 @@ public class ActivatedPlatform : MovingPlatform
 
     public void Activate()
     {
+        if (isActive) return;
+
         isActive = true;
     }
 

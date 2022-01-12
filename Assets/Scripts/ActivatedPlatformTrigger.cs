@@ -13,9 +13,4 @@ public class ActivatedPlatformTrigger : PlatformTrigger
 
         activatedPlatform.Activate();
     }
-
-    protected override void OnTriggerExit(Collider other)
-    {
-        base.OnTriggerExit(other);
-    }
 }
